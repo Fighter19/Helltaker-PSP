@@ -13,6 +13,7 @@ LIBDIR =
 LDFLAGS =
 
 EXTRA_TARGETS = EBOOT.PBP
+EXTRA_CLEAN = $(DEPENDS)
 PSP_EBOOT_TITLE = Template
 
 PSPSDK=$(shell psp-config --pspsdk-path)
