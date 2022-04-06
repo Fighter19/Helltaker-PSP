@@ -1,12 +1,11 @@
 #include "movement.h"
-#include "field.h"
 
 /* Checks if character on pos can move to new pos
  * @param new_pos is a pointer to the position that can be walked to,
  *    only filled if "not-NULL"
  */
 bool
-checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirection direction)
+checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirection direction, enum FieldPieces cur_piece)
 {
   struct Position target = pos;
   // In case something unexpected happens, assume it won't work
@@ -49,7 +48,7 @@ checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirectio
       // Kick the enemy but stand in place
       isWalkable = false;
       struct Position enemy_pos_new;
-      if (!checkIfWalkable(target, &enemy_pos_new, direction)) {
+      if (!checkIfWalkable(target, &enemy_pos_new, direction, eEnemy)) {
           field.pieces[target.y][target.x] = eGround;
       } else {
         // Clear old location
@@ -62,7 +61,7 @@ checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirectio
     case eRock:
       isWalkable = false;
       struct Position rock_pos;
-      if (checkIfWalkable(target, &rock_pos, direction)) {
+      if (checkIfWalkable(target, &rock_pos, direction, eRock)) {
         field.pieces[target.y][target.x] = eGround;
         field.pieces[rock_pos.y][rock_pos.x] = eRock;
       }
@@ -84,7 +83,7 @@ void
 tryWalk(enum WalkDirection direction)
 {
   struct Position target_pos;
-  if (checkIfWalkable(player, &target_pos, direction)) {
+  if (checkIfWalkable(player, &target_pos, direction, ePlayer)) {
     player = target_pos;
   }
 }

@@ -10,7 +10,8 @@ enum FieldPieces
   eGoal,
   eLock,
   eEnemy,
-  eWall
+  eWall,
+  ePlayer, // virtual field-piece, tracked seperately
 };
 
 // Offset of the board in characters
