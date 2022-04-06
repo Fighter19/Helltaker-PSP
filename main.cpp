@@ -18,6 +18,7 @@
 #include <pspkernel.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cstdio>
 
 /* Define the module info section */
 PSP_MODULE_INFO("CONTROLTEST", 0, 1, 1);
@@ -26,7 +27,7 @@ PSP_MODULE_INFO("CONTROLTEST", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 
 /* Define printf, just to make typing easier */
-#define printf pspDebugScreenPrintf
+//#define printf pspDebugScreenPrintf
 
 void
 dump_threadstatus(void);
@@ -172,6 +173,72 @@ printField()
   pspDebugScreenPuts(player_symbol);
 }
 
+enum WalkDirection
+{
+  eWalkUp,
+  eWalkDown,
+  eWalkLeft,
+  eWalkRight
+};
+
+bool
+checkIfWalkable(enum WalkDirection direction)
+{
+  // In case something unexpected happens, assume it won't work
+  enum FieldPieces piece = eWall;
+  switch(direction) {
+    case eWalkUp:
+      if (player_y > 0)
+        piece = field.pieces[player_y-1][player_x];
+      break;
+    case eWalkDown:
+      if (player_y+1 < Y_SIZE)
+        piece = field.pieces[player_y+1][player_x];
+      break;
+    case eWalkLeft:
+      if (player_x > 0)
+        piece = field.pieces[player_y][player_x-1];
+      break;
+    case eWalkRight:
+      if (player_x+1 < X_SIZE)
+        piece = field.pieces[player_y][player_x+1];
+      break;
+  }
+  
+  bool isWalkable = false;
+  switch(piece) {
+    case eGround:
+      isWalkable = true;
+      break;
+    default:
+      isWalkable = false;
+      break;
+  }
+  
+  return isWalkable;
+}
+
+void
+tryWalk(enum WalkDirection direction)
+{
+  if (checkIfWalkable(direction)) {
+    switch(direction) {
+      case eWalkUp:
+        player_y -= 1;
+        break;
+      case eWalkDown:
+        player_y += 1;
+        break;
+      case eWalkLeft:
+        player_x -= 1;
+        break;
+      case eWalkRight:
+        player_x += 1;
+        break;
+    }    
+  }
+}
+
 int
 main(void)
 {
@@ -188,8 +255,8 @@ main(void)
 
     sceCtrlReadBufferPositive(&pad, 1);
 
-    printf("Analog X = %d ", pad.Lx);
-    printf("Analog Y = %d \n", pad.Ly);
+    //printf("Analog X = %d ", pad.Lx);
+    //printf("Analog Y = %d \n", pad.Ly);
 
     printField();
 
@@ -210,15 +277,20 @@ main(void)
       }
 
       if (pad.Buttons & PSP_CTRL_UP) {
+        tryWalk(eWalkUp);
         printf("Up pressed \n");
       }
       if (pad.Buttons & PSP_CTRL_DOWN) {
+        tryWalk(eWalkDown);
         printf("Down pressed \n");
+        printf("Coords: %d, %d\n", player_x, player_y);
       }
       if (pad.Buttons & PSP_CTRL_LEFT) {
+        tryWalk(eWalkLeft);
         printf("Left pressed \n");
       }
       if (pad.Buttons & PSP_CTRL_RIGHT) {
+        tryWalk(eWalkRight);
         printf("Right pressed \n");
       }
 
