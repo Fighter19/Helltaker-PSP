@@ -1,10 +1,11 @@
 TARGET = template
 OBJS = main.o field.o movement.o controls.o
+DEPENDS = $(OBJS:.o=.d)
 
 BUILD_PRX=1
 
-INCDIR = 
-CFLAGS = -O2 -G0 -Wall
+INCDIR =
+CFLAGS = -O2 -G0 -Wall -MMD
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 
@@ -16,3 +17,5 @@ PSP_EBOOT_TITLE = Template
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
+
+-include $(DEPENDS)
