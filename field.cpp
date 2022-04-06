@@ -1,9 +1,9 @@
 #include <pspdebug.h>
+#include <cstddef>
 
 #include "field.h"
 
-size_t player_x = 5;
-size_t player_y = 3;
+struct Position player = { .x = 5, .y = 3 };
 
 struct Field field = { .pieces = {
     {eWall,    eWall,    eWall,    eGoal,    eGround,   eWall},
@@ -80,6 +80,6 @@ printField()
     pspDebugScreenPuts("-");
   }
 
-  pspDebugScreenSetXY(X_OFFSET + player_x, Y_OFFSET + player_y);
+  pspDebugScreenSetXY(X_OFFSET + player.x, Y_OFFSET + player.y);
   pspDebugScreenPuts(player_symbol);
 } 

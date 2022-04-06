@@ -9,7 +9,7 @@ enum WalkDirection
 };
 
 bool
-checkIfWalkable(enum WalkDirection direction);
+checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirection direction);
 
 void
 tryWalk(enum WalkDirection direction);

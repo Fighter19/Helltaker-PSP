@@ -1,5 +1,5 @@
 TARGET = template
-OBJS = main.o
+OBJS = main.o field.o movement.o controls.o
 
 BUILD_PRX=1
 

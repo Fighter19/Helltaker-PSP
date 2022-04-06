@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstddef>
+#include "position.h"
 
 enum FieldPieces
 {
@@ -29,8 +29,7 @@ struct Field
 // Variables implemented in field.cpp
 extern Field field;
 
-extern size_t player_x;
-extern size_t player_y;
+extern struct Position player;
 
 // Functions implemented in field.cpp
 const char*
