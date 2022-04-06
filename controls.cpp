@@ -6,7 +6,16 @@
 
 // Only used once inside controls.cpp, so it's safe to make it static
 // (will make it invisible for other files)
-static SceCtrlData pad;
+static SceCtrlData pad, pad_old;
+
+bool
+buttonRecentlyPressed(int bitmask)
+{
+    if (!(pad_old.Buttons & bitmask) && (pad.Buttons & bitmask)) {
+        return true;
+    }
+    return false;
+}
 
 void
 execControls()
@@ -14,47 +23,48 @@ execControls()
     sceCtrlReadBufferPositive(&pad, 1);
 
     if (pad.Buttons != 0) {
-      if (pad.Buttons & PSP_CTRL_SQUARE) {
+      if (buttonRecentlyPressed(PSP_CTRL_SQUARE)) {
         printf("Square pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_TRIANGLE) {
+      if (buttonRecentlyPressed(PSP_CTRL_TRIANGLE)) {
         printf("Triangle pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_CIRCLE) {
+      if (buttonRecentlyPressed(PSP_CTRL_CIRCLE)) {
         printf("Cicle pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_CROSS) {
+      if (buttonRecentlyPressed(PSP_CTRL_CROSS)) {
         printf("Cross pressed \n");
       }
 
-      if (pad.Buttons & PSP_CTRL_UP) {
+      if (buttonRecentlyPressed(PSP_CTRL_UP)) {
         tryWalk(eWalkUp);
         printf("Up pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_DOWN) {
+      if (buttonRecentlyPressed(PSP_CTRL_DOWN)) {
         tryWalk(eWalkDown);
         printf("Down pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_LEFT) {
+      if (buttonRecentlyPressed(PSP_CTRL_LEFT)) {
         tryWalk(eWalkLeft);
         printf("Left pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_RIGHT) {
+      if (buttonRecentlyPressed(PSP_CTRL_RIGHT)) {
         tryWalk(eWalkRight);
         printf("Right pressed \n");
       }
 
-      if (pad.Buttons & PSP_CTRL_START) {
+      if (buttonRecentlyPressed(PSP_CTRL_START)) {
         printf("Start pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_SELECT) {
+      if (buttonRecentlyPressed(PSP_CTRL_START)) {
         printf("Select pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_LTRIGGER) {
+      if (buttonRecentlyPressed(PSP_CTRL_START)) {
         printf("L-trigger pressed \n");
       }
-      if (pad.Buttons & PSP_CTRL_RTRIGGER) {
+      if (buttonRecentlyPressed(PSP_CTRL_START)) {
         printf("R-trigger pressed \n");
       }
     }
+    pad_old = pad;
 }
