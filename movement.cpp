@@ -15,18 +15,26 @@ checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirectio
     case eWalkUp:
       if (pos.y > 0)
         target.y--;
+      else
+        return false;
       break;
     case eWalkDown:
       if (pos.y+1 < Y_SIZE)
         target.y++;
+      else
+        return false;
       break;
     case eWalkLeft:
       if (pos.x > 0)
         target.x--;
+      else
+        return false;
       break;
     case eWalkRight:
       if (pos.x+1 < X_SIZE)
         target.x++;
+      else
+        return false;
       break;
   }
   
@@ -42,10 +50,7 @@ checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirectio
       isWalkable = false;
       struct Position enemy_pos_new;
       if (!checkIfWalkable(target, &enemy_pos_new, direction)) {
-        // Only kill if it's not the player who's touching the wall
-        if (!(target.x == player.x && target.y == player.y)) {
           field.pieces[target.y][target.x] = eGround;
-        }
       } else {
         // Clear old location
         field.pieces[target.y][target.x] = eGround;
@@ -54,6 +59,14 @@ checkIfWalkable(struct Position pos, struct Position *new_pos, enum WalkDirectio
       }
       break;
     // TODO: Do something similar with the rock
+    case eRock:
+      isWalkable = false;
+      struct Position rock_pos;
+      if (checkIfWalkable(target, &rock_pos, direction)) {
+        field.pieces[target.y][target.x] = eGround;
+        field.pieces[rock_pos.y][rock_pos.x] = eRock;
+      }
+      break;
     default:
       isWalkable = false;
       break;
